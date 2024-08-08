@@ -1,0 +1,49 @@
+.container {}
+
+.conversationItem {
+    display: flex;
+    padding: 8px 24px;
+    cursor: pointer;
+    border-radius: 10px;
+}
+
+.conversationItem:hover {
+    background: #b688ff40;
+}
+
+.imgAvatar {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.left {
+    width: 30%;
+    height: 88vh;
+    overflow-y: scroll;
+    padding-right: 10px;
+    border-right: 1px solid rgb(219, 219, 219);
+    padding-top: 20px;
+}
+
+.right {
+    width: 70%;
+    position: relative;
+    border-top: 1px solid rgb(219, 219, 219);
+}
+
+.headerChat {
+    border: 1px solid #ccc;
+    display: flex;
+    align-items: center;
+    padding: 8px 24px;
+    height: 10%;
+}
+
+.chatZone {
+    height: calc(78%);
+    /* height: 85%; */
+    overflow-y: auto;
+    padding-left: 20px;
+}

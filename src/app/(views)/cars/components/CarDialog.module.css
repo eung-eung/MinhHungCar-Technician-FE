@@ -1,0 +1,67 @@
+.topBody {
+    display: flex;
+
+}
+
+.inforItem {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 10px;
+    flex-wrap: wrap;
+}
+
+.carInfo {
+    margin-left: 30px;
+    width: 50%;
+}
+
+.bodyBottom {
+    margin-top: 20px;
+}
+
+.licenseImages {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+}
+
+.label {
+    /* margin-right: 30px; */
+    font-weight: 600;
+    font-size: 15px;
+}
+
+.infor {
+    font-size: 17px;
+}
+
+.caveats {
+    position: relative;
+    text-align: center;
+    font-weight: 600;
+    font-size: 20px;
+    margin-top: 20px;
+}
+
+.caveats::after {
+    content: '';
+    left: 0;
+    display: block;
+    width: 40%;
+    height: 0.5px;
+    background: #dbdbdb;
+    position: absolute;
+    top: 50%;
+}
+
+.caveats::before {
+    content: '';
+    display: block;
+    width: 40%;
+    height: 0.5px;
+    background: #dbdbdb;
+    right: 0;
+    position: absolute;
+    top: 50%;
+}

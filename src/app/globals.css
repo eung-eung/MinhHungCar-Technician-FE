@@ -1,0 +1,84 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import './nprogress.css';
+
+html {
+  scrollbar-width: thin;
+  scroll-behavior: smooth;
+}
+
+:root {
+  --background: #fff;
+  --darkBackground: #000000;
+  --grayBackground: #efefef
+}
+
+.linkNotification {
+  background: #fff !important;
+}
+
+.linkNotification:focus {
+  color: #000000 !important;
+}
+
+.linkNotification:hover {
+  background-color: #ebebeb !important;
+
+}
+
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+
+.box {
+  margin: 0 15px;
+}
+
+html {
+  background: var(--background);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+.notiList {
+  width: 300px;
+  background: "#fff";
+  top: '150%';
+  max-height: 500px;
+  overflow: hidden;
+  opacity: 0;
+}
+
+.dropdown-content {
+  --tw-scale-y: 0 !important;
+  --tw-scale-y: 0 !important;
+  transform: none !important;
+}
+
+
+.notiList:hover {
+  overflow-y: scroll;
+  opacity: 1;
+  transition: opacity 1.5s;
+}
+
+.notiList {
+  scrollbar-width: thin;
+  scroll-behavior: smooth;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+}
