@@ -30,6 +30,7 @@ import './style.css'
 import Ribbon from './components/Ribbon';
 import Link from 'next/link';
 import { IPayment } from '@/app/models/Payment.model';
+import dayjs from 'dayjs';
 type Option = {
     label: string,
     valeu: string
@@ -67,10 +68,6 @@ export default function ContractPage({
     const axiosAuth = useAxiosAuth()
     const [refresh, setRefresh] = useState<boolean>(true)
     const { t } = useTranslation()
-    const router = useRouter()
-    const [fuelOptions, setFuelOptions] = useState<Option[]>()
-    const [motionOptions, setMotionOptions] = useState<Option[]>()
-    const [parkingLotOptions, setParkingLotOption] = useState<Option[]>()
     const [loadingDialog, setLoadingDialog] = useState<boolean>(true);
     const [carDetail, setCarDetail] = useState<ICar>()
     const [openAccountDialog, setOpenAccountDialog] = useState<boolean>(false)
@@ -236,159 +233,13 @@ export default function ContractPage({
         }
 
     };
-    const approveCustomerContract = async (id: any) => {
-        const { confirm, error } = Modal
-        try {
-            const contractResponse = await axiosAuth.get("/admin/contract/" + id)
-            const contractDetail: ICustomerContract = contractResponse.data.data
-            const paymentListResponse = await axiosAuth.get('/admin/customer_payments?customer_contract_id=' + customerContractDetail?.id)
-            const paymentList = paymentListResponse.data.data
-            const refundPayment = paymentList.find(
-                (payment: IPayment) => (payment.payment_type === "refund_pre_pay")
-            )
-            const returnCollateralCash = paymentList.find(
-                (payment: IPayment) => payment.payment_type === 'return_collateral_cash')
-            const collateralCash = paymentList.find(
-                (payment: IPayment) => payment.payment_type === 'collateral_cash')
-            if (returnCollateralCash && returnCollateralCash.status === 'paid') {
-                errorNotify("Bạn không thể duyệt vì đã hoàn trả tiền thế chấp cho khách hàng")
-                return
-            }
-            if (contractDetail.collateral_type === 'cash') {
-                if ((collateralCash && collateralCash.status === 'pending') || !collateralCash) {
-                    errorNotify("Khoản tiền thế chấp chưa được khách hàng thanh toán")
-                    return
-                }
-            }
-            if (refundPayment && refundPayment.status === 'pending') {
-                errorNotify("Vui lòng xóa khoản thanh toán hoàn trả tiền cọc")
-                return
-            }
-            if (refundPayment && refundPayment.status === 'paid') {
-                errorNotify("Bạn không thể duyệt vì đã hoàn trả tiền cọc cho khách hàng")
-                return
-            }
-            if (contractDetail.collateral_type === "cash"
-                && contractDetail.receiving_car_images.length < 1
-            ) {
-                errorNotify("Vui lòng thêm ảnh trước khi bàn giao")
-                return
-            }
-            if (contractDetail.collateral_type === "motorbike"
-                &&
-                (
-                    contractDetail.receiving_car_images.length < 1
-                    || contractDetail.collateral_asset_images.length < 1
-                )) {
-                errorNotify("Vui lòng thêm ảnh trước khi bàn giao")
-                return
-            }
-        } catch (error) {
 
-        }
-
-        confirm({
-            title: 'Bạn có muốn đồng ý cho thuê?',
-            onOk: async () => {
-                try {
-                    const response = await axiosAuth.put('/admin/contract', {
-                        customer_contract_id: id,
-                        action: "approve"
-                    })
-
-                    if (response.status === 200) {
-                        setRefresh(prev => !prev)
-                        sucessNotify('Cập nhật hợp đồng thành công')
-                    }
-                } catch (e: any) {
-                    console.log(e);
-                    if (e.response.data.error_code == 10032) {
-                        error({
-                            title: 'Chiếc xe này đã dừng hoạt động, vui lòng thay xe hoặc hoàn trả thế chấp',
-                        })
-                    }
-                }
-            },
-            onCancel: () => {
-
-            }
-        })
-
-    }
-
-    const rejectCustomerContract = (id: any) => {
-        const { confirm } = Modal
-        confirm({
-            title: "Bạn có muốn từ chối hợp đồng này?",
-            cancelText: "Hủy",
-            onOk: async () => {
-                try {
-                    const paymentListResponse = await axiosAuth.get('/admin/customer_payments?customer_contract_id=' + customerContractDetail?.id)
-                    const paymentList = paymentListResponse.data.data
-                    const refundPayment = paymentList.find(
-                        (payment: IPayment) => payment.payment_type === "refund_pre_pay"
-                            && payment.status === "paid"
-                    )
-                    if (customerContractDetail?.collateral_type === 'motorbike') {
-                        if (!customerContractDetail.is_return_collateral_asset) {
-                            errorNotify("Vui lòng ghi nhận đã hoàn trả giấy tờ xe ở quản lý các khoản thanh toán")
-                            return
-                        }
-                        if (!refundPayment) {
-                            errorNotify("Bạn cần hoàn trả tiền cọc")
-                            return
-                        }
-                    }
-                    if (customerContractDetail?.collateral_type === 'cash') {
-                        const isReturnCollateralPayment = paymentList.find(
-                            (payment: IPayment) => (
-                                payment.payment_type === "return_collateral_cash"
-                                && payment.status === 'paid'
-                            )
-                        )
-                        const isPaidCollateralPayment = paymentList.find(
-                            (payment: IPayment) => (
-                                payment.payment_type === 'collateral_cash'
-                                && payment.status === 'paid'
-                            )
-                        )
-                        console.log('isPaidCollateralPayment: ', isPaidCollateralPayment);
-
-                        console.log('isReturnCollateralPayment: ', isReturnCollateralPayment);
-
-                        if ((!isReturnCollateralPayment && isPaidCollateralPayment)) {
-                            errorNotify("Bạn cần hoàn trả tiền thế chấp")
-                            return
-                        }
-                        if (!refundPayment) {
-                            errorNotify("Bạn cần hoàn trả tiền cọc")
-                            return
-                        }
-                    }
-                    console.log('refund payment: ', refundPayment)
-                    const response = await axiosAuth.put("/admin/contract", {
-                        customer_contract_id: id,
-                        action: "reject"
-                    })
-                    if (response.status === 200) {
-                        sucessNotify("Đã từ chối hợp đồng thành công")
-                        setRefresh(prev => !prev)
-                    }
-                } catch (error) {
-                    errorNotify("Đã có lỗi, vui lòng thử lại")
-                }
-
-
-            }
-        })
-    }
     const getContractDetailById = async (id: any) => {
         setLoading(true)
         try {
             const response = await axiosAuth.get(
                 '/admin/contract/' + id
             )
-            getMetadataFromCar()
             setCustomerContractDetail(response.data.data)
 
             setFileList(
@@ -418,56 +269,7 @@ export default function ContractPage({
         }
 
     }
-    const handleChangeFuels = (value: string) => {
-        setParamReplaceCar((prev: any) => ({
-            ...prev,
-            fuels: value
-        }))
-    }
-    const handleChangeParkingLots = (value: string) => {
-        setParamReplaceCar((prev: any) => ({
-            ...prev,
-            parking_lots: value
-        }))
-    }
-    const handleChangeSeats = (value: string) => {
-        setParamReplaceCar((prev: any) => ({
-            ...prev,
-            number_of_seats: value
-        }))
-    }
-    const handleChangeMotions = (value: string) => {
-        setParamReplaceCar((prev: any) => ({
-            ...prev,
-            motions: value
-        }))
-    }
 
-    const getMetadataFromCar = async () => {
-        try {
-            const response = await axiosAuth.get('/register_car_metadata')
-            setParkingLotOption(response.data.parking_lot.map((data: any) => (
-                {
-                    label: data.text,
-                    value: data.code
-                }
-            )))
-            setMotionOptions(response.data.motions.map((data: any) => (
-                {
-                    label: data.text,
-                    value: data.code
-                }
-            )))
-            setFuelOptions(response.data.fuels.map((data: any) => (
-                {
-                    label: data.text,
-                    value: data.code
-                }
-            )))
-        } catch (error) {
-            console.log(error);
-        }
-    }
     useEffect(() => {
         getContractDetailById(customerIdSlug)
     }, [customerIdSlug, refresh])
@@ -515,7 +317,7 @@ export default function ContractPage({
                                     {
                                         title: <Link
                                             style={{ color: "blue" }}
-                                            href={`/contracts`}>Hợp đồng khách hàng</Link>,
+                                            href={`/`}>Danh sách xe cần kiểm tra</Link>,
                                     },
                                     {
                                         title: <p style={{
@@ -552,24 +354,34 @@ export default function ContractPage({
                                             </span>
                                             <Ribbon status={customerContractDetail?.status} content={t(`common:${customerContractDetail?.status}`)} />
                                         </p>
-                                        <p className='font-medium mt-4'>Loại xe:   {
-                                            ' '
-                                            + customerContractDetail?.car.car_model.brand
-                                            + ' '
-                                            + customerContractDetail?.car.car_model.model
-                                            + ' '
-                                            + customerContractDetail?.car.car_model.year
-                                        }</p>
+                                        <p
+
+                                            className='font-medium mt-4'
+
+                                        >Loại xe:   <span
+                                            onClick={() => handleOpenDetailDialog(customerContractDetail?.car.id)}
+                                            style={{
+                                                color: 'blue',
+                                                cursor: 'pointer'
+                                            }}>{
+                                                    ' '
+                                                    + customerContractDetail?.car.car_model.brand
+                                                    + ' '
+                                                    + customerContractDetail?.car.car_model.model
+                                                    + ' '
+                                                    + customerContractDetail?.car.car_model.year
+                                                }</span>
+                                        </p>
                                         <p className='font-medium mt-3'>Loại thế chấp:   {
                                             ' '
                                             + t(`common:${customerContractDetail?.collateral_type}`)
                                         }</p>
                                         <p className='font-medium mt-3'>Ngày nhận xe:   {
-                                            customerContractDetail?.start_date && new Date(customerContractDetail.start_date).toLocaleString()
+                                            customerContractDetail?.start_date && dayjs(customerContractDetail.end_date).format('DD-MM-YYYY HH:mm:ss')
                                         }
                                         </p>
                                         <p className='font-medium mt-3'>Ngày trả xe:   {
-                                            customerContractDetail?.end_date && new Date(customerContractDetail.end_date).toLocaleString()
+                                            customerContractDetail?.end_date && dayjs(customerContractDetail.end_date).format('DD-MM-YYYY HH:mm:ss')
                                         }
                                         </p>
                                         {/* {
@@ -582,96 +394,6 @@ export default function ContractPage({
                                             }</p>
                                         } */}
                                     </div>
-                                    {
-                                        !searchParams &&
-                                        <div className='flex flex-col items-baseline'>
-                                            {customerContractDetail?.status === 'ordered' &&
-                                                <div className='flex justify-between w-full'>
-                                                    <button
-                                                        style={{
-                                                            color: '#fff',
-                                                            padding: '7px 20px',
-                                                            outline: 'none',
-                                                            border: 'none',
-                                                            cursor: 'pointer',
-                                                            background: 'red',
-                                                            marginRight: '20px'
-                                                        }}
-                                                        onClick={() => rejectCustomerContract(parseInt(customerIdSlug))}
-                                                        className="inline-flex 
-                                                animate-shimmer 
-                                                items-center 
-                                                justify-center 
-                                                rounded-md border 
-                                                bg-[length:200%_100%] 
-                                                font-medium 
-                                                text-slate-400 
-                                                transition-colors 
-                                                focus:outline-none 
-                                                focus:ring-offset-2 focus:ring-offset-slate-50 mt-4"
-                                                    >
-                                                        Từ chối hợp đồng
-                                                        <CloseRoundedIcon sx={{ color: '#fff', fontSize: 16, marginLeft: 2 }} />
-                                                    </button>
-
-                                                    <button
-                                                        style={{
-                                                            color: '#fff',
-                                                            padding: '7px 20px',
-                                                            outline: 'none',
-                                                            border: 'none',
-                                                            cursor: 'pointer',
-                                                        }}
-                                                        onClick={() => approveCustomerContract(parseInt(customerIdSlug))}
-                                                        className="inline-flex 
-                                                animate-shimmer 
-                                                items-center 
-                                                justify-center 
-                                                rounded-md border 
-                                                border-slate-800 bg-[linear-gradient(110deg,#33bf4e,45%,#60ff7e,55%,#33bf4e)]
-                                                bg-[length:200%_100%] 
-                                                font-medium 
-                                                text-slate-400 
-                                                transition-colors 
-                                                focus:outline-none 
-                                                focus:ring-offset-2 focus:ring-offset-slate-50 mt-4"
-                                                    >
-                                                        Duyệt hợp đồng
-                                                        <CheckOutlinedIcon sx={{ color: '#fff', fontSize: 16, marginLeft: 2 }} />
-                                                    </button>
-                                                </div>
-                                            }
-                                            <button
-                                                style={{
-                                                    color: '#fff',
-                                                    padding: '7px 20px',
-                                                    outline: 'none',
-                                                    border: 'none',
-                                                    cursor: 'pointer',
-                                                    background: 'orange',
-                                                    width: '100%'
-                                                }}
-                                                onClick={
-                                                    () => router.push('/contracts/payments/' + customerIdSlug)
-                                                }
-                                                className="inline-flex
-                                                animate-shimmer 
-                                                items-center 
-                                                justify-center 
-                                                rounded-md border 
-                                                bg-[length:200%_100%] 
-                                                font-medium 
-                                                text-slate-400 
-                                                transition-colors 
-                                                focus:outline-none 
-                                                focus:ring-offset-2 focus:ring-offset-slate-50 mt-4"
-                                            >
-                                                Quản lý các khoản thanh toán của hợp đồng
-                                                <PriceCheckOutlinedIcon sx={{ color: '#fff', fontSize: 20, marginLeft: 2 }} />
-                                            </button>
-                                        </div>
-                                    }
-
                                 </div>
                                 {
                                     customerContractDetail?.collateral_type !== 'cash'
@@ -699,7 +421,7 @@ export default function ContractPage({
                                     </div>
                                 }
 
-                                {
+                                {/* {
                                     !searchParams && customerContractDetail?.status === 'ordered' &&
                                     <><h1
                                         style={{
@@ -773,7 +495,7 @@ export default function ContractPage({
                                             }
                                         </div>
                                     </>
-                                }
+                                } */}
                                 <Button
                                     type='primary'
                                     style={{ width: '200px' }}

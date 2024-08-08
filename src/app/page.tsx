@@ -1,11 +1,12 @@
 'use client'
-import Dashboard from '@/app/(views)/dashboard/page';
+
 import ToastNotification from './layouts/components/ToastNotification';
+import Contracts from './(views)/contracts/page';
 
 
 export default function Home() {
   return (
-    <Dashboard />
+    <Contracts />
   );
 }
 

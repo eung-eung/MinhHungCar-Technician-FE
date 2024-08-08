@@ -180,19 +180,6 @@ export default function CarInformation(
 
                 }
             </div>
-            {detail?.status === "active" && <div className='flex justify-between mt-4'>
-                <p className={classes.label}>
-                    Số lần giao xe trễ</p>
-                <div> <CountQuantityInput
-                    car={detail}
-                    warningCount={detail.warning_count}
-                    setRefresh={setRefresh}
-                    maxWarningCount={detail.partner_contract_rule.max_warning_count}
-                />
-                    <span> / {detail.partner_contract_rule.max_warning_count}</span>
-                </div>
-            </div>
-            }
             {/* item */}
             <div className={classes.inforItem}>
                 <p className={classes.label}>
