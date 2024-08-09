@@ -31,7 +31,6 @@ export default function Header() {
                                                 focus:outline-none 
                                                 focus:ring-offset-2 focus:ring-offset-slate-50"
                 style={{
-                    background: '#d4d3ff',
                     padding: 5,
                     borderRadius: 10,
                     color: "blue",
