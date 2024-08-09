@@ -20,6 +20,8 @@ import BlockRoundedIcon from '@mui/icons-material/BlockRounded';
 import { IPartnerContractRule } from '@/app/models/ContractRule'
 import InActiveCarDropDown from './InActiveCarDropDown'
 import CountQuantityInput from './CountQuantityInput'
+import nProgress from 'nprogress'
+
 export default function CarTable(
     {
         carData,
@@ -84,52 +86,45 @@ export default function CarTable(
             key: 'id',
             render: (car_model: ICarModel) => car_model.number_of_seats
         },
-        {
-            title: 'Số lần giao xe trễ',
-            dataIndex: 'count',
-            key: 'id',
-            render: (_, record) => record.status === 'active'
-                ? <>
-                    <CountQuantityInput
-                        setRefresh={setRefresh}
-                        maxWarningCount={record.partner_contract_rule.max_warning_count}
-                        car={record}
-                        warningCount={record.warning_count}
-                    />
-                    <span> / {record.partner_contract_rule.max_warning_count}</span>
-                </>
-                : <BlockRoundedIcon color='disabled' />
-        },
+        // {
+        //     title: 'Số lần giao xe trễ',
+        //     dataIndex: 'count',
+        //     key: 'id',
+        //     render: (_, record) => record.status === 'active'
+        //         ? <>
+        //             {record.warning_count}
+        //             <span> / {record.partner_contract_rule.max_warning_count}</span>
+        //         </>
+        //         : <BlockRoundedIcon color='disabled' />
+        // },
         {
             title: '',
             dataIndex: 'action',
             key: 'id',
             render: (_, record) => {
-
-
                 return <div className={classes.actionBox}>
                     {
-                        filter === 'pending_approval' &&
-                        <PendingApprovalDropdown
-                            id={record.id}
-                            carDetail={carDetail}
-                            loadingDialog={loadingDialog}
-                            setOpen={setOpen}
-                            setRefresh={setRefresh}
-                        />
-                    }
-                    {
-                        filter === 'approved' &&
-                        <RemoveRedEyeOutlinedIcon
-                            className='cursor-pointer'
-                            onClick={() => router.push('/cars/' + record.id)}
-                        />
-                    }
-                    {
-                        filter === 'active' &&
-                        <ActiveCarDropdown
-                            id={record.id}
-                        />
+                        filter !== 'waiting_car_delivery' &&
+                        <div
+                            onClick={() => {
+                                nProgress.start()
+                                router.push('/cars/' + record.id)
+                            }}
+                            className='flex items-center justify-center'
+                            style={{
+                                cursor: "pointer",
+                                width: '34px',
+                                height: '34px',
+                                borderRadius: '12px',
+                                border: '1px solid',
+                                backgroundColor: '#e8ebed1a',
+                                borderColor: '#d9dee2',
+                                boxShadow: '#f6f7f866 0 2px 0 inset, #e8eaee80 0 -1.5px 0 inset, #dfe2e780 0 1px 2px 0'
+                            }}>
+                            <RemoveRedEyeOutlinedIcon sx={{
+                                color: "#6a53df"
+                            }} />
+                        </div>
                     }
                     {
                         filter === 'waiting_car_delivery' &&
@@ -139,12 +134,6 @@ export default function CarTable(
                             loadingDialog={loadingDialog}
                             setOpen={setOpen}
                             setRefresh={setRefresh}
-                        />
-                    }
-                    {
-                        filter === 'inactive' &&
-                        <InActiveCarDropDown
-                            id={record.id}
                         />
                     }
                 </div>
