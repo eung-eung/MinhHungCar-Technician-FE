@@ -111,7 +111,7 @@ export default function Cars() {
                     { label: 'Xe dừng hoạt động', value: 'inactive' },
                 ]}
                 handleSearch={handleSearch}
-                showGarageConfig={true}
+                showGarageConfig={false}
             />
             <div className='mb-5'>
                 <Flex gap="4px 0" wrap justify='end'>
