@@ -100,11 +100,23 @@ export default function ContractTable(
             dataIndex: 'action',
             key: 'id',
             render: (_, record) => {
-                return <div style={{ position: 'relative', cursor: 'pointer' }} onClick={() => {
-                    nProgress.start()
-                    router.push('/contracts/' + record.id)
-                }}>
-                    <RemoveRedEyeOutlinedIcon />
+                return <div
+                    className='flex items-center justify-center'
+                    style={{
+                        cursor: "pointer",
+                        width: '34px',
+                        height: '34px',
+                        borderRadius: '12px',
+                        border: '1px solid',
+                        backgroundColor: '#e8ebed1a',
+                        borderColor: '#d9dee2',
+                        boxShadow: '#f6f7f866 0 2px 0 inset, #e8eaee80 0 -1.5px 0 inset, #dfe2e780 0 1px 2px 0'
+                    }}
+                    onClick={() => {
+                        nProgress.start()
+                        router.push('/contracts/' + record.id)
+                    }}>
+                    <RemoveRedEyeOutlinedIcon sx={{ color: "#0073e6" }} />
                 </div>
 
             }
