@@ -122,7 +122,7 @@ export default function CarTable(
                                 boxShadow: '#f6f7f866 0 2px 0 inset, #e8eaee80 0 -1.5px 0 inset, #dfe2e780 0 1px 2px 0'
                             }}>
                             <RemoveRedEyeOutlinedIcon sx={{
-                                color: "#6a53df"
+                                color: "#0073e6"
                             }} />
                         </div>
                     }
