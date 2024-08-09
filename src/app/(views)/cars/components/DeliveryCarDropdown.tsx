@@ -91,7 +91,7 @@ export default function DeliveryCarDropdown(
                             },
                             {
                                 key: '2',
-                                label: 'Đưa vào hoạt động',
+                                label: 'Cho hoạt động',
                                 onClick: () =>
                                     handleApproveCar(id)
                             },
