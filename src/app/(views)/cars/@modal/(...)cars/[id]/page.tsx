@@ -22,14 +22,11 @@ export default function InterceptingCarDetail({
     const [carDetail, setCarDetail] = useState<ICar>()
     const [open, setOpen] = useState<boolean>(false);
     const [refresh, setRefresh] = useState<boolean>(false)
-    const [contractRules, setContractRules] = useState<IPartnerContractRule>()
     const handleOpenDetailDialog = async (id: any) => {
         // setOpen(true);
         setLoadingDialog(true);
         const carDetail = await axiosAuth.get(`/car/${id}`)
-        const contractRules = await axiosAuth.get('/admin/partner_contract_rule')
         const detail: ICar = carDetail.data.data
-        setContractRules(contractRules.data.data)
         setCarDetail(detail)
         setLoadingDialog(false)
     };
@@ -47,7 +44,6 @@ export default function InterceptingCarDetail({
                 isIntercept={true}
             >
                 <CarDialog
-                    contractRules={contractRules}
                     setRefresh={setRefresh}
                     detail={carDetail}
                 />

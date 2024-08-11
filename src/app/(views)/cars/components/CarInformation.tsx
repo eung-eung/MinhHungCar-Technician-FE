@@ -49,7 +49,7 @@ export default function CarInformation(
         showConfirmModal("Bạn có muốn đưa xe vào hoạt động?")
             .then(async () => {
                 try {
-                    const response = await axiosAuth.put('/admin/car_application', {
+                    const response = await axiosAuth.put('/technician/car_application', {
                         car_id: id,
                         action: "approve_delivery"
                     } as IApproveRequest)
@@ -65,7 +65,7 @@ export default function CarInformation(
         showConfirmModal("Bạn có muốn duyệt xe này?")
             .then(async () => {
                 try {
-                    const response = await axiosAuth.put('/admin/car_application', {
+                    const response = await axiosAuth.put('/technician/car_application', {
                         car_id: id,
                         action: "approve_register"
                     } as IApproveRequest)
@@ -91,7 +91,7 @@ export default function CarInformation(
         showConfirmModal("Bạn có muốn từ chối xe này?")
             .then(async () => {
                 try {
-                    const response = await axiosAuth.put('/admin/car_application', {
+                    const response = await axiosAuth.put('/technician/car_application', {
                         car_id: id,
                         action: "reject"
                     } as IApproveRequest)

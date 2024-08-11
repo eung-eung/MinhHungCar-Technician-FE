@@ -147,7 +147,7 @@ export default function ContractPage({
             onOk: async () => {
                 try {
                     setOpenContractPdf(false)
-                    const response = await axiosAuth.post('/admin/customer_contract/change_car', {
+                    const response = await axiosAuth.post('/technician/customer_contract/change_car', {
                         customer_contract_id: parseInt(customerContractId),
                         new_car_id: parseInt(carId)
                     })
@@ -170,7 +170,7 @@ export default function ContractPage({
         setLoadingReplaceCarList(true)
         try {
             const response = await axiosAuth.get(
-                `/admin/find_change_cars`, {
+                `/technician/find_change_cars`, {
                 params: {
                     start_date: customerContractDetail?.start_date,
                     end_date: customerContractDetail?.end_date,
@@ -197,7 +197,7 @@ export default function ContractPage({
         if (!openContractPdf) {
             try {
                 const response = await axiosAuth.get(
-                    '/admin/contract/' + id
+                    '/technician/contract/' + id
                 )
                 setPdfUrl(response.data.data.url)
 
@@ -211,7 +211,7 @@ export default function ContractPage({
         try {
             setOpenAccountDialog(true)
             setLoadingAccountDialog(true)
-            const response = await axiosAuth.get('/admin/account/' + id)
+            const response = await axiosAuth.get('/technician/account/' + id)
             setAccountDetail(response.data.data)
             setLoadingAccountDialog(false)
         } catch (error) {
@@ -238,7 +238,7 @@ export default function ContractPage({
         setLoading(true)
         try {
             const response = await axiosAuth.get(
-                '/admin/contract/' + id
+                '/technician/contract/' + id
             )
             setCustomerContractDetail(response.data.data)
 
@@ -269,7 +269,74 @@ export default function ContractPage({
         }
 
     }
+    const approveCustomerContract = async (id: any) => {
+        const { confirm, error } = Modal
+        try {
+            const contractResponse = await axiosAuth.get("/technician/contract/" + id)
+            console.log('res: ', contractResponse.data.data);
 
+            const contractDetail: ICustomerContract = contractResponse.data.data
+            if (contractDetail.collateral_type === "cash"
+                && contractDetail.receiving_car_images.length < 1
+            ) {
+                errorNotify("Vui lòng thêm ảnh trước khi bàn giao")
+                return
+            }
+        } catch (error) {
+
+        }
+
+        confirm({
+            title: 'Bạn có muốn duyệt?',
+            onOk: async () => {
+                try {
+                    const response = await axiosAuth.put('/technician/customer_contract/appraising_car', {
+                        customer_contract_id: id,
+                        action: "approve"
+                    })
+
+                    if (response.status === 200) {
+                        setRefresh(prev => !prev)
+                        sucessNotify('Đã duyệt thành công')
+                    }
+                } catch (e: any) {
+                    console.log(e);
+                    if (e.response.data.error_code == 10032) {
+                        error({
+                            title: 'Chiếc xe này đã dừng hoạt động, vui lòng thay xe hoặc hoàn trả thế chấp',
+                        })
+                    }
+                }
+            },
+            onCancel: () => {
+
+            }
+        })
+
+    }
+    const rejectCustomerContract = (id: any) => {
+        const { confirm } = Modal
+        confirm({
+            title: "Bạn có muốn từ chối hợp đồng này?",
+            cancelText: "Hủy",
+            onOk: async () => {
+                try {
+                    const response = await axiosAuth.put("/technician/customer_contract/appraising_car", {
+                        customer_contract_id: id,
+                        action: "reject"
+                    })
+                    if (response.status === 200) {
+                        sucessNotify("Đã từ chối thành công")
+                        setRefresh(prev => !prev)
+                    }
+                } catch (error) {
+                    errorNotify("Đã có lỗi, vui lòng thử lại")
+                }
+
+
+            }
+        })
+    }
     useEffect(() => {
         getContractDetailById(customerIdSlug)
     }, [customerIdSlug, refresh])
@@ -394,6 +461,67 @@ export default function ContractPage({
                                             }</p>
                                         } */}
                                     </div>
+                                    {
+                                        !searchParams &&
+                                        <div className='flex flex-col items-baseline'>
+                                            {customerContractDetail?.status === 'ordered' &&
+                                                <div className='flex justify-between w-full'>
+                                                    <button
+                                                        style={{
+                                                            color: '#fff',
+                                                            padding: '7px 20px',
+                                                            outline: 'none',
+                                                            border: 'none',
+                                                            cursor: 'pointer',
+                                                            background: 'red',
+                                                            marginRight: '20px'
+                                                        }}
+                                                        onClick={() => rejectCustomerContract(parseInt(customerIdSlug))}
+                                                        className="inline-flex 
+                                                animate-shimmer 
+                                                items-center 
+                                                justify-center 
+                                                rounded-md border 
+                                                bg-[length:200%_100%] 
+                                                font-medium 
+                                                text-slate-400 
+                                                transition-colors 
+                                                focus:outline-none 
+                                                focus:ring-offset-2 focus:ring-offset-slate-50 mt-4"
+                                                    >
+                                                        Từ chối
+                                                        <CloseRoundedIcon sx={{ color: '#fff', fontSize: 16, marginLeft: 2 }} />
+                                                    </button>
+
+                                                    <button
+                                                        style={{
+                                                            color: '#fff',
+                                                            padding: '7px 20px',
+                                                            outline: 'none',
+                                                            border: 'none',
+                                                            cursor: 'pointer',
+                                                        }}
+                                                        onClick={() => approveCustomerContract(parseInt(customerIdSlug))}
+                                                        className="inline-flex 
+                                                animate-shimmer 
+                                                items-center 
+                                                justify-center 
+                                                rounded-md border 
+                                                border-slate-800 bg-[linear-gradient(110deg,#33bf4e,45%,#60ff7e,55%,#33bf4e)]
+                                                bg-[length:200%_100%] 
+                                                font-medium 
+                                                text-slate-400 
+                                                transition-colors 
+                                                focus:outline-none 
+                                                focus:ring-offset-2 focus:ring-offset-slate-50 mt-4"
+                                                    >
+                                                        Duyệt
+                                                        <CheckOutlinedIcon sx={{ color: '#fff', fontSize: 16, marginLeft: 2 }} />
+                                                    </button>
+                                                </div>
+                                            }
+                                        </div>
+                                    }
                                 </div>
                                 {
                                     customerContractDetail?.collateral_type !== 'cash'

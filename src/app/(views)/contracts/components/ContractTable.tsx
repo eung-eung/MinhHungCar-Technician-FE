@@ -41,7 +41,7 @@ export default function ContractTable(
     const openAccountDetailDialog = async (id: any) => {
         setOpenAccountDialog(true)
         setLoadingAccountDialog(true)
-        const response = await axiosAuth.get('/admin/account/' + id)
+        const response = await axiosAuth.get('/technician/account/' + id)
         setAccountDetail(response.data.data)
         setLoadingAccountDialog(false)
 

@@ -9,7 +9,6 @@ import { useRouter } from "next/navigation";
 
 interface WebSocketContextValue {
     ws: WebSocket | null;
-    conversationWs: WebSocket | null;
     isConnected: boolean;
     notifications: any;
     sound: any,
@@ -21,7 +20,6 @@ export const WebSocketContext = createContext<WebSocketContextValue>({
     isConnected: false,
     notifications: [],
     sound: true,
-    conversationWs: null,
     setNotifications: () => { }
 });
 
@@ -42,7 +40,7 @@ export const WebSocketNotiProvider = ({ children }: { children: React.ReactNode 
     // get notification list with api
     const getNotificationList = async () => {
         try {
-            const response = await axiosAuth.get('/admin/notifications?offset=0&limit=100')
+            const response = await axiosAuth.get('/technician/notifications?offset=0&limit=100')
             setNotifications(response.data.data)
         } catch (error) {
             console.log(error);
@@ -71,26 +69,13 @@ export const WebSocketNotiProvider = ({ children }: { children: React.ReactNode 
     useEffect(() => {
         const initSocket = async () => {
             try {
-                const newWs = new WebSocket('wss://minhhungcar.xyz/admin/subscribe_notification')
-                const chatCoversationWs = new WebSocket('wss://minhhungcar.xyz/admin/subscribe_conversation')
+                const newWs = new WebSocket('wss://minhhungcar.xyz/tech/subscribe_notification')
+                // const chatCoversationWs = new WebSocket('wss://minhhungcar.xyz/admin/subscribe_conversation')
                 //notification socket
                 newWs.onopen = () => {
                     setIsConnected(true)
                     newWs.send(JSON.stringify({ access_token: `Bearer ${session?.access_token}` }))
                 }
-                // newWs.onmessage = handleSocketMessage
-                // newWs.onerror = handleSocketError
-
-                // conversation socket
-                chatCoversationWs.onopen = () => {
-                    setConversationWsIsConnected(true)
-                    chatCoversationWs.send(JSON.stringify({ access_token: `Bearer ${session?.access_token}` }))
-                }
-
-                // chatCoversationWs.onmessage = handleConversationSocketMessage
-                // chatCoversationWs.onerror = handleConversationSocketError
-
-                setConversationWs(chatCoversationWs)
                 setWs(newWs);
             } catch (error) {
                 console.error('WebSocket connection error:', error);
@@ -113,7 +98,7 @@ export const WebSocketNotiProvider = ({ children }: { children: React.ReactNode 
 
     return (
         <WebSocketContext.Provider value={
-            { setNotifications, ws, isConnected, notifications, sound, conversationWs }}>
+            { setNotifications, ws, isConnected, notifications, sound }}>
             {children}
         </WebSocketContext.Provider>
     );

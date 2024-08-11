@@ -25,8 +25,8 @@ export default function Account() {
         const getData = setTimeout(async () => {
             setLoading(true)
             const query = filter === 'all' ?
-                `/admin/accounts?search_param=${searchValue}&offset=0&limit=100`
-                : `/admin/accounts?role=${filter}&search_param=${searchValue}&offset=0&limit=100`
+                `/technician/accounts?search_param=${searchValue}&offset=0&limit=100`
+                : `/technician/accounts?role=${filter}&search_param=${searchValue}&offset=0&limit=100`
             const getAccountsBySearch = await axiosAuth.get(query)
             setAccountData(getAccountsBySearch.data.data)
             setLoading(false)
@@ -39,7 +39,7 @@ export default function Account() {
         setAccountData([])
         setLoading(true)
         const response = await axiosAuth.get(
-            `/admin/accounts?${filter === 'all' ? '' : `role=${filter}&`}offset=0&limit=100`
+            `/technician/accounts?${filter === 'all' ? '' : `role=${filter}&`}offset=0&limit=100`
         )
         setAccountData(response.data.data)
         setLoading(false)

@@ -26,7 +26,7 @@ export default NextAuth({
                     password: payload.password
                 })
                 const responseJson = response.data
-                if (responseJson.data.user.role === 'admin') {
+                if (responseJson.data.user.role === "technician") {
                     return responseJson.data
                 }
                 return null

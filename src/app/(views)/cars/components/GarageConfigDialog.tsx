@@ -31,7 +31,7 @@ export default function GarageConfigDialog(
     const getGarageConfig = async () => {
         try {
             setLoading(true)
-            const response = await axiosAuth.get('/admin/garage_config')
+            const response = await axiosAuth.get('/technician/garage_config')
             const filterData = removeKeys(response.data.data, keysToRemove)
             setGarageConfig(filterData)
             setLoading(false)
@@ -57,7 +57,7 @@ export default function GarageConfigDialog(
         config.max_15_seats = parseInt(garageConfig?.max_15_seats)
 
         try {
-            const response = await axiosAuth.put('/admin/garage_config', config)
+            const response = await axiosAuth.put('/technician/garage_config', config)
             if (response.status === 200) {
                 sucessNotify('Cập nhật thành công')
             }

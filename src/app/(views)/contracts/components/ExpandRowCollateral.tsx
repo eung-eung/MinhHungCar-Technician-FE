@@ -62,7 +62,7 @@ export default function ExpandRowCollateral(
         formData.append('customer_contract_id', id)
         files.forEach((file: any) => formData.append('files', file))
 
-        const response = await axiosAuth.put('/admin/contract/document', formData)
+        const response = await axiosAuth.put('/technician/contract/document', formData)
         setLoadingUpdate(false)
         if (response.status === 200) {
             sucessNotify('Thêm ảnh thành công')
@@ -79,7 +79,7 @@ export default function ExpandRowCollateral(
             confirm({
                 title: 'Bạn có muốn xóa ảnh này?',
                 onOk: async () => {
-                    const response = await axiosAuth.put('/admin/contract/image', {
+                    const response = await axiosAuth.put('/technician/contract/image', {
                         customer_contract_image_id: file.uid,
                         new_status: "inactive"
                     })

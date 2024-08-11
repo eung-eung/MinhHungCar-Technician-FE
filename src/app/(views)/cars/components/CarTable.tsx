@@ -27,13 +27,11 @@ export default function CarTable(
         carData,
         loading,
         filter,
-        contractRules,
         setRefresh
     }: {
         carData: ICar[],
         loading: boolean,
         filter: any,
-        contractRules?: IPartnerContractRule,
         setRefresh: React.Dispatch<React.SetStateAction<boolean>>
     }) {
     const axiosAuth = useAxiosAuth()
@@ -86,17 +84,6 @@ export default function CarTable(
             key: 'id',
             render: (car_model: ICarModel) => car_model.number_of_seats
         },
-        // {
-        //     title: 'Số lần giao xe trễ',
-        //     dataIndex: 'count',
-        //     key: 'id',
-        //     render: (_, record) => record.status === 'active'
-        //         ? <>
-        //             {record.warning_count}
-        //             <span> / {record.partner_contract_rule.max_warning_count}</span>
-        //         </>
-        //         : <BlockRoundedIcon color='disabled' />
-        // },
         {
             title: '',
             dataIndex: 'action',
@@ -122,7 +109,7 @@ export default function CarTable(
                                 boxShadow: '#f6f7f866 0 2px 0 inset, #e8eaee80 0 -1.5px 0 inset, #dfe2e780 0 1px 2px 0'
                             }}>
                             <RemoveRedEyeOutlinedIcon sx={{
-                                color: "#0073e6"
+                                color: "#6a53df"
                             }} />
                         </div>
                     }

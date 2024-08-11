@@ -36,7 +36,7 @@ export default function AccountTable(
     const handleOpenDetailDialog = async (id: any) => {
         setOpen(true)
         setLoadingDialog(true)
-        const response = await axiosAuth.get('/admin/account/' + id)
+        const response = await axiosAuth.get('/technician/account/' + id)
         setAccountDetail(response.data.data)
         setLoadingDialog(false)
 

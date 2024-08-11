@@ -43,7 +43,7 @@ export default function ContractPage({
     const getContractByCarId = async (id: any) => {
         setLoading(true)
         try {
-            const response = await axiosAuth.get('/admin/partner_contract?car_id=' + id)
+            const response = await axiosAuth.get('/technician/partner_contract?car_id=' + id)
             setPdfUrl(response.data.data.url)
             setLoading(false)
         } catch (error: any) {

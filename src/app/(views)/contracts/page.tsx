@@ -22,12 +22,12 @@ export default function Contracts() {
             setLoading(true)
             if (searchValue) {
                 const response = await axiosAuth.get(
-                    `admin/contracts?customer_contract_status=${status}&search_param=${searchValue}&limit=100&offset=0`
+                    `technician/contracts?customer_contract_status=${status}&search_param=${searchValue}&limit=100&offset=0`
                 )
                 setContractData(response.data.data.contracts)
             } else {
                 const response = await axiosAuth.get(
-                    `admin/contracts?customer_contract_status=${status}&limit=100&offset=0`
+                    `technician/contracts?customer_contract_status=${status}&limit=100&offset=0`
                 )
                 setContractData(response.data.data.contracts)
             }
@@ -74,8 +74,10 @@ export default function Contracts() {
                 showSearch={true}
                 optionList={[
                     { label: 'Đã đặt', value: 'ordered' },
+                    { label: 'Đã duyệt thẩm định', value: 'appraising_car_approved' },
                     { label: 'Đang thuê', value: 'renting' },
                     { label: 'Hoàn thành', value: 'completed' },
+                    { label: 'Đã thẩm định thất bại', value: 'appraising_car_rejected' },
                     { label: 'Đã hủy', value: 'canceled' },
                 ]}
                 handleSearch={handleSearch}

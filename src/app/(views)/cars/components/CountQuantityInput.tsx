@@ -29,7 +29,7 @@ export default function CountQuantityInput(
                 title: `Bạn có muốn giảm số lần giao trễ của xe ${car.car_model.brand} ${car.car_model.model} ${car.car_model.year}?`,
                 onOk: async () => {
                     try {
-                        const response = await axiosAuth.put('/admin/warning_count', {
+                        const response = await axiosAuth.put('/technician/warning_count', {
                             car_id: car.id,
                             new_warning_count: value - 1
                         })
@@ -54,7 +54,7 @@ export default function CountQuantityInput(
                 title: `Bạn có muốn tăng số lần giao trễ của xe ${car.car_model.brand} ${car.car_model.model} ${car.car_model.year}?`,
                 onOk: async () => {
                     try {
-                        const response = await axiosAuth.put('/admin/warning_count', {
+                        const response = await axiosAuth.put('/technician/warning_count', {
                             car_id: car.id,
                             new_warning_count: value + 1
                         })
@@ -73,7 +73,7 @@ export default function CountQuantityInput(
                 title: `${car.car_model.brand} ${car.car_model.model} ${car.car_model.year} sẽ bị dừng hoạt động, bạn có muốn tiếp tục?`,
                 onOk: async () => {
                     try {
-                        const response = await axiosAuth.put('/admin/warning_count', {
+                        const response = await axiosAuth.put('/technician/warning_count', {
                             car_id: car.id,
                             new_warning_count: value + 1
                         })
