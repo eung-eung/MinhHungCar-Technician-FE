@@ -28,7 +28,7 @@ export default function DeliveryCarDropdown(
                 try {
                     const response = await axiosAuth.put('/technician/car_application', {
                         car_id: id,
-                        action: "approve_delivery"
+                        action: "approve_appraising_car"
                     } as IApproveRequest)
                     setRefresh(prev => !prev)
                 } catch (error) {
