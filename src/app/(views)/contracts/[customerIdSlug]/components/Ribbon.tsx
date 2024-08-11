@@ -23,6 +23,16 @@ export default function Ribbon({ status, content }: { status: any, content: any 
                 &&
                 <span className='ribbonCanceled'>{content}</span>
             }
+            {
+                status === 'appraising_car_approved'
+                &&
+                <span className='ribbonAppraisingApproved'>{content}</span>
+            }
+            {
+                status === 'appraising_car_rejected'
+                &&
+                <span className='ribbonCanceled'>{content}</span>
+            }
         </>
     )
 }
