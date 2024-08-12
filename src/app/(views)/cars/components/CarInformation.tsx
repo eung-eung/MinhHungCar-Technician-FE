@@ -51,7 +51,7 @@ export default function CarInformation(
                 try {
                     const response = await axiosAuth.put('/technician/car_application', {
                         car_id: id,
-                        action: "approve_delivery"
+                        action: "approve_appraising_car"
                     } as IApproveRequest)
                     if (setRefresh) {
                         setRefresh(prev => !prev)
