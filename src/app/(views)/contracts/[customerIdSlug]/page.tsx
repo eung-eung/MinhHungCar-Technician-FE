@@ -276,8 +276,7 @@ export default function ContractPage({
             console.log('res: ', contractResponse.data.data);
 
             const contractDetail: ICustomerContract = contractResponse.data.data
-            if (contractDetail.collateral_type === "cash"
-                && contractDetail.receiving_car_images.length < 1
+            if (contractDetail.receiving_car_images.length < 1
             ) {
                 errorNotify("Vui lòng thêm ảnh trước khi bàn giao")
                 return
@@ -523,7 +522,7 @@ export default function ContractPage({
                                         </div>
                                     }
                                 </div>
-                                {
+                                {/* {
                                     customerContractDetail?.collateral_type !== 'cash'
                                     &&
                                     <div className='mt-4'> <ExpandRowCollateral
@@ -534,7 +533,7 @@ export default function ContractPage({
                                         status={customerContractDetail?.status}
                                         setFileList={setFileList}
                                     /></div>
-                                }
+                                } */}
                                 {
                                     !searchParams &&
                                     <div className='mt-4 mb-7'>
