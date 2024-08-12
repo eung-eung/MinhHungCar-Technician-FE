@@ -31,7 +31,7 @@ export default function Ribbon({ status, content }: { status: any, content: any 
             {
                 status === 'appraising_car_rejected'
                 &&
-                <span className='ribbonCanceled'>{content}</span>
+                <span className='ribbonAppraisingRejected'>{content}</span>
             }
         </>
     )
