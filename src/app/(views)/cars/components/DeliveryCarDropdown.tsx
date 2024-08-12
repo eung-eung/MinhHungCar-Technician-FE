@@ -4,6 +4,7 @@ import MoreHorizOutlinedIcon from '@mui/icons-material/MoreHorizOutlined';
 import useAxiosAuth from '@/app/utils/hooks/useAxiosAuth';
 import { ICar } from '@/app/models/Car.model';
 import { useRouter } from 'next/navigation';
+import nProgress from 'nprogress';
 type IApproveRequest = {
     car_id: any,
     action: string
@@ -86,8 +87,10 @@ export default function DeliveryCarDropdown(
                             {
                                 key: '1',
                                 label: 'Chi tiết',
-                                onClick: () =>
+                                onClick: () => {
+                                    nProgress.start()
                                     router.push('/cars/' + id)
+                                }
                             },
                             {
                                 key: '2',
@@ -101,12 +104,12 @@ export default function DeliveryCarDropdown(
                                 onClick: () =>
                                     showCarContract(id)
                             },
-                            // {
-                            //     key: '3',
-                            //     label: 'Từ chối',
-                            //     onClick: () =>
-                            //         handleRejectCar(id)
-                            // },
+                            {
+                                key: '3',
+                                label: 'Từ chối',
+                                onClick: () =>
+                                    handleRejectCar(id)
+                            },
                         ]}>
 
                     </Menu>
