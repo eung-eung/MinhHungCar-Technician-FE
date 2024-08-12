@@ -94,18 +94,18 @@ export default function DeliveryCarDropdown(
                             },
                             {
                                 key: '2',
-                                label: 'Cho hoạt động',
-                                onClick: () =>
-                                    handleApproveCar(id)
-                            },
-                            {
-                                key: '3',
                                 label: 'Hợp đồng',
                                 onClick: () =>
                                     showCarContract(id)
                             },
                             {
                                 key: '3',
+                                label: 'Cho hoạt động',
+                                onClick: () =>
+                                    handleApproveCar(id)
+                            },
+                            {
+                                key: '4',
                                 label: 'Từ chối',
                                 onClick: () =>
                                     handleRejectCar(id)
