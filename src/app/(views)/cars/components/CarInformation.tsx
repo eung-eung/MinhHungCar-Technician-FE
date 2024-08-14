@@ -143,13 +143,6 @@ export default function CarInformation(
                 </div>
             }
             <div className='flex justify-end'>
-                {(detail?.status === "active" || detail?.status === "waiting_car_delivery") &&
-                    <Button
-                        type='primary'
-                        onClick={() => showContract(detail?.id)}>
-                        Xem hợp đồng
-                    </Button>
-                }
                 {
                     showAction && detail?.status === 'waiting_car_delivery' &&
                     <button
