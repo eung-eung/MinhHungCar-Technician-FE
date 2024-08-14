@@ -31,6 +31,7 @@ import Ribbon from './components/Ribbon';
 import Link from 'next/link';
 import { IPayment } from '@/app/models/Payment.model';
 import dayjs from 'dayjs';
+import TextArea from 'antd/es/input/TextArea';
 type Option = {
     label: string,
     valeu: string
@@ -90,7 +91,7 @@ export default function ContractPage({
         renderToolbar,
     });
     const { renderDefaultToolbar } = defaultLayoutPluginInstance.toolbarPluginInstance;
-    console.log('from noti: ', searchParams);
+    const [noteValue, setNoteValue] = useState<any>('')
 
     const column: TableProps<ICar>['columns'] = [
         {
@@ -139,6 +140,12 @@ export default function ContractPage({
                 handleOpenDetailDialog={() => handleOpenDetailDialog(record.id)} />
         }
     ]
+
+    const handleChangeNote = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        console.log(e.target.value);
+        setNoteValue(e.target.value)
+    };
+
     const changeCarForCustomer = async (carId: any, customerContractId: any) => {
         const { confirm } = Modal
         confirm({
@@ -269,6 +276,30 @@ export default function ContractPage({
         }
 
     }
+
+    const handleAppraisingReturnedCar = async (id: any) => {
+        // /technician/customer_contract/appraising_returned_car
+        const { confirm } = Modal
+        try {
+            confirm({
+                title: "Bạn có muốn xác nhận hoàn thành kiểm tra?",
+                cancelText: "Hủy",
+                onOk: async () => {
+                    const response = await axiosAuth.put('/technician/customer_contract/appraising_returned_car', {
+                        customer_contract_id: id,
+                        note: noteValue
+                    })
+                    if (response.status === 200) {
+                        sucessNotify('Đã xác nhận thành công')
+                        setRefresh(prev => !prev)
+                    }
+                }
+            })
+        } catch (error) {
+            errorNotify("Đã có lỗi, vui lòng thử lại")
+        }
+    }
+
     const approveCustomerContract = async (id: any) => {
         const { confirm, error } = Modal
         try {
@@ -463,6 +494,35 @@ export default function ContractPage({
                                     {
                                         !searchParams &&
                                         <div className='flex flex-col items-baseline'>
+                                            {
+                                                customerContractDetail?.status === 'returned_car' && <div className='flex justify-between w-full'>
+                                                    <button
+                                                        style={{
+                                                            color: '#fff',
+                                                            padding: '7px 20px',
+                                                            outline: 'none',
+                                                            border: 'none',
+                                                            cursor: 'pointer',
+                                                        }}
+                                                        onClick={() => handleAppraisingReturnedCar(parseInt(customerIdSlug))}
+                                                        className="inline-flex 
+                                        animate-shimmer 
+                                        items-center 
+                                        justify-center 
+                                        rounded-md border 
+                                        border-slate-800 bg-[linear-gradient(110deg,#33bf4e,45%,#60ff7e,55%,#33bf4e)]
+                                        bg-[length:200%_100%] 
+                                        font-medium 
+                                        text-slate-400 
+                                        transition-colors 
+                                        focus:outline-none 
+                                        focus:ring-offset-2 focus:ring-offset-slate-50 mt-4"
+                                                    >
+                                                        Xác nhận hoàn thành kiểm tra
+                                                        <CheckOutlinedIcon sx={{ color: '#fff', fontSize: 16, marginLeft: 2 }} />
+                                                    </button>
+                                                </div>
+                                            }
                                             {customerContractDetail?.status === 'ordered' &&
                                                 <div className='flex justify-between w-full'>
                                                     <button
@@ -623,6 +683,16 @@ export default function ContractPage({
                                         </div>
                                     </>
                                 } */}
+                                {
+                                    customerContractDetail?.status === 'returned_car' && <div>
+                                        <h2
+                                            style={{ color: "#9250fa" }}
+                                            className='text-base mt-3 mb-3 font-semibold '>
+                                            Ghi chú sau khi kiểm tra xe
+                                        </h2>
+                                        <TextArea placeholder="Vui lòng thêm ghi chú nếu có" value={noteValue} allowClear onChange={handleChangeNote} />
+                                    </div>
+                                }
                                 <Button
                                     type='primary'
                                     style={{ width: '200px' }}
