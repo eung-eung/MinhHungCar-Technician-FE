@@ -5,6 +5,7 @@
     "rejected": "Đã từ chối duyệt",
     "waiting_car_delivery": "Đang chờ giao",
     "inactive": "Dừng hoạt động",
+    "temporary_resolve": "Tạm dừng hoạt động",
     "electricity": "Điện",
     "oil": "Dầu",
     "gas": "Xăng",
@@ -33,5 +34,7 @@
     "ordered": "Đã đặt",
     "canceled": "Đã hủy",
     "appraising_car_approved": "Đã duyệt thẩm định xe",
-    "appraising_car_rejected": "Đã thẩm định thất bại"
+    "appraising_car_rejected": "Đã thẩm định thất bại",
+    "pending_resolve": "Đang xử lí sự cố",
+    "resolved": "Đã xử lí sự cố"
 }
