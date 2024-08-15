@@ -20,7 +20,7 @@
     "customer": "Khách hàng",
     "partner": "Đối tác",
     "cash": "Tiền mặt",
-    "motorbike": "Xe",
+    "motorbike": "Giấy tờ xe",
     "paid": "Đã thanh toán",
     "pre_pay": "Tiền cọc",
     "pending": "Chưa thanh toán",
@@ -33,8 +33,10 @@
     "completed": "Đã hoàn thành",
     "ordered": "Đã đặt",
     "canceled": "Đã hủy",
-    "appraising_car_approved": "Đã duyệt thẩm định xe",
-    "appraising_car_rejected": "Đã thẩm định thất bại",
+    "appraising_car_approved": "Đủ điều kiện bàn giao",
+    "appraising_car_rejected": "Không đủ điều kiện bàn giao",
+    "returned_car": "Đã trả xe",
+    "appraised_return_car": "Hoàn thành kiểm tra",
     "pending_resolve": "Đang xử lí sự cố",
     "resolved": "Đã xử lí sự cố"
 }
