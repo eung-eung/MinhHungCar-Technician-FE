@@ -50,7 +50,7 @@ export default function CarDetail({
             }
             {notFound && !loading && <div>404</div>}
             {
-                !notFound && <div className={classes.detail}>
+                !notFound && <div className={classes.detail + ' row-span-1 rounded-xl h-max  group/bento transition duration-200 shadow-input dark:shadow-none p-4 pb-5 dark:bg-black dark:border-white/[0.2] bg-white border border-transparent space-y-4'}>
                     <div className={classes.leftDetail}>
                         <CarouselImages images={detail?.images} />
                     </div>
