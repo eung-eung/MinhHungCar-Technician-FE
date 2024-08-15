@@ -33,6 +33,16 @@ export default function Ribbon({ status, content }: { status: any, content: any 
                 &&
                 <span className='ribbonAppraisingRejected'>{content}</span>
             }
+            {
+                status === 'pending_resolve'
+                &&
+                <span className='ribbonPendingResolve'>{content}</span>
+            }
+            {
+                status === 'resolved'
+                &&
+                <span className='ribbonResolved'>{content}</span>
+            }
         </>
     )
 }
