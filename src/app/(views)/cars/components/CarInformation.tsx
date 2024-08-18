@@ -30,6 +30,7 @@ export default function CarInformation(
     const showContract = (id: any) => {
         window.open(`/cars/contract/${id}`, '_blank')
     }
+
     const showConfirmModal = (title: any) => {
         const { confirm } = Modal
         return new Promise((res, rej) => {
@@ -45,6 +46,7 @@ export default function CarInformation(
             })
         })
     }
+
     const handleBringCarToActive = async (id: any) => {
         showConfirmModal("Bạn có muốn đưa xe vào hoạt động?")
             .then(async () => {
@@ -66,7 +68,7 @@ export default function CarInformation(
             .then(async () => {
                 try {
                     const response = await axiosAuth.put('/technician/car_application', {
-                        car_id: id,
+                        car_id: parseInt(id),
                         action: "approve_register"
                     } as IApproveRequest)
                     if (setRefresh) {
@@ -92,7 +94,7 @@ export default function CarInformation(
             .then(async () => {
                 try {
                     const response = await axiosAuth.put('/technician/car_application', {
-                        car_id: id,
+                        car_id: parseInt(id),
                         action: "reject"
                     } as IApproveRequest)
                     if (response.status === 200) {
@@ -145,17 +147,33 @@ export default function CarInformation(
             <div className='flex justify-end'>
                 {
                     showAction && detail?.status === 'waiting_car_delivery' &&
-                    <button
-                        onClick={() => handleBringCarToActive(detail?.id)}
-                        style={{
-                            color: '#fff',
-                            fontSize: 13,
-                            padding: '0 10px',
-                            outline: 'none',
-                            border: 'none',
-                            marginLeft: 10
-                        }}
-                        className="inline-flex
+                    <>
+                        <button
+                            onClick={() => handleRejectCar(detail?.id)}
+                            style={{
+                                color: '#fff',
+                                fontSize: 13,
+                                padding: '5px 10px',
+                                outline: 'none',
+                                border: 'none',
+                                marginLeft: 10,
+                                background: 'red',
+                                borderRadius: 5
+                            }}
+                        >
+                            Từ chối
+                        </button>
+                        <button
+                            onClick={() => handleBringCarToActive(detail?.id)}
+                            style={{
+                                color: '#fff',
+                                fontSize: 13,
+                                padding: '5px 10px',
+                                outline: 'none',
+                                border: 'none',
+                                marginLeft: 10
+                            }}
+                            className="inline-flex
                     animate-shimmer 
                     items-center 
                     justify-center 
@@ -167,10 +185,10 @@ export default function CarInformation(
                      transition-colors 
                      focus:outline-none 
                      focus:ring-offset-2 focus:ring-offset-slate-50"
-                    >
-                        Đưa vào hoạt động
-                    </button>
-
+                        >
+                            Đưa vào hoạt động
+                        </button>
+                    </>
                 }
             </div>
             {/* item */}
