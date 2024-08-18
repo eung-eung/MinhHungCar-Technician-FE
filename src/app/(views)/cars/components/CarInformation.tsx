@@ -306,6 +306,19 @@ export default function CarInformation(
                             {t(`common:${detail?.status}`)}
                         </Tag>
                     }
+                    {
+                        t('carStatus:temporary_inactive') === detail?.status &&
+                        <Tag
+                            style={{
+                                margin: 0,
+                                fontSize: 14,
+                                padding: 3,
+                                background: "rgb(91, 76, 64)",
+                                color: "#fff"
+                            }}>
+                            {t(`common:${detail?.status}`)}
+                        </Tag>
+                    }
                 </p>
             </div>
             {/* item */}
