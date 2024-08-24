@@ -25,8 +25,6 @@ export const WebSocketContext = createContext<WebSocketContextValue>({
 
 export const WebSocketNotiProvider = ({ children }: { children: React.ReactNode }) => {
     const [ws, setWs] = useState<WebSocket | null>(null);
-    const [conversationWs, setConversationWs] = useState<WebSocket | null>(null)
-    const [conversationWsIsConnected, setConversationWsIsConnected] = useState<boolean>(false)
     const [isConnected, setIsConnected] = useState<boolean>(false);
     const [notifications, setNotifications] = useState<any>()
     const { data: session } = useSession()
@@ -47,38 +45,28 @@ export const WebSocketNotiProvider = ({ children }: { children: React.ReactNode 
 
         }
     }
-    // onmessage with notification socket
-    const handleSocketMessage = (event: MessageEvent) => {
 
-
-    };
-    // on error notification socket
-    const handleSocketError = (error: Event) => {
-        console.error('WebSocket error:', error)
-    };
-
-    // on message conversation socket
-    // const handleConversationSocketMessage = (message: MessageEvent) => {
-    //     console.log('vào conversation message');
-
-
-    // }
-    const handleConversationSocketError = () => {
-
-    }
     useEffect(() => {
+        let timer: any
         const initSocket = async () => {
             try {
                 const newWs = new WebSocket('wss://minhhungcar.xyz/tech/subscribe_notification')
-                // const chatCoversationWs = new WebSocket('wss://minhhungcar.xyz/admin/subscribe_conversation')
                 //notification socket
                 newWs.onopen = () => {
                     setIsConnected(true)
                     newWs.send(JSON.stringify({ access_token: `Bearer ${session?.access_token}` }))
+                    timer = setInterval(() => {
+                        console.log(timer);
+
+                        newWs.send('')
+                    }, 7000)
                 }
                 setWs(newWs);
             } catch (error) {
                 console.error('WebSocket connection error:', error);
+                if (timer) {
+                    clearInterval(timer)
+                }
             }
         };
 
@@ -87,9 +75,6 @@ export const WebSocketNotiProvider = ({ children }: { children: React.ReactNode 
         return () => {
             if (ws) {
                 ws.close(); // Clean up on unmount
-            }
-            if (conversationWs) {
-                conversationWs.close()
             }
         };
 
